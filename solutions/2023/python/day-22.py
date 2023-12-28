@@ -87,31 +87,6 @@ while moved_bricks:
     moved_bricks = check_for_falling_bricks()
 
 
-def find_safe_brick(b_id):
-    safe_brick = True
-    for k, brick in enumerate(brick_input):
-        if k == i:
-            continue
-        start_b, end_b = brick
-        if not check_collesion(b_id, start_b, end_b, b_id):
-            safe_brick = False
-            break
-
-    return safe_brick
-
-
-ans_1 = 0
-not_safe_ids = set()
-safe_ids = set()
-
-for i, _ in enumerate(brick_input):
-    b_id = i + 1
-    if find_safe_brick(b_id):
-        safe_ids.add(b_id)
-        ans_1 += 1
-    else:
-        not_safe_ids.add(b_id)
-
 cache = {}
 
 
@@ -151,7 +126,7 @@ for k, v in brick_map.items():
         brick_map[s_id].rest_on.append(k)
 
 
-def get_support_count_2(b_id, removed_ids):
+def get_support_count(b_id, removed_ids):
     b = brick_map[b_id]
 
     if removed_ids is not None and not set(b.rest_on).issubset(removed_ids):
@@ -163,45 +138,13 @@ def get_support_count_2(b_id, removed_ids):
         removed_ids.add(b_id)
 
     for s_id in b.supports:
-        get_support_count_2(s_id, removed_ids)
+        get_support_count(s_id, removed_ids)
 
     return removed_ids
 
 
-support_cache = {}
-
-
-def get_support_count(b_id, removed_rest_on=None, actual_rest_on=None):
-    b = brick_map[b_id]
-
-    if removed_rest_on is None:
-        removed_rest_on = set([b_id])
-    else:
-        removed_rest_on.add(b_id)
-    if actual_rest_on is None:
-        actual_rest_on = set()
-    else:
-        actual_rest_on.update(set(b.rest_on))
-
-    current_removed = set()
-    current_actual = set()
-    for s_id in b.supports:
-        new_rest_on, new_actual_rest_on = get_support_count(
-            s_id, removed_rest_on, actual_rest_on
-        )
-        current_removed.update(new_rest_on)
-        current_actual.update(new_actual_rest_on)
-
-    if current_actual.issubset(current_removed):
-        removed_rest_on.update(current_removed)
-        actual_rest_on.update(current_actual)
-
-    return (removed_rest_on, actual_rest_on)
-
-
-ans_1 = 0
-
 test_safe = set()
+not_safe_ids = set()
 
 for i in range(len(brick_input)):
     b_id = i + 1
@@ -216,12 +159,14 @@ for i in range(len(brick_input)):
 
     if safe:
         test_safe.add(b_id)
-        ans_1 += 1
+    else:
+        not_safe_ids.add(b_id)
 
 
+ans_1 = len(test_safe)
 ans_2 = 0
 for b_id in not_safe_ids:
-    num_f_b = get_support_count_2(b_id, None)
+    num_f_b = get_support_count(b_id, None)
     ans_2 += len(num_f_b) - 1
 
 print("Part 1:", ans_1)
