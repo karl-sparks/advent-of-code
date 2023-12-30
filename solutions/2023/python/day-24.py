@@ -79,7 +79,7 @@ print("Part 1:", ans_1)
 # E.g.
 # (xs - xr)*(ydr - yds) - (ys - yr)*(xdr - xds) = 0
 # (ys - yr)*(zdr - zds) - (zs - zr)*(ydr - yds) = 0
-# we then go through each hailstone and add this equation and solve using sympy
+# we then go through each hailstone and add this two equations and solve using sympy
 def solve_part2(stones):
     xr, yr, zr, xdr, ydr, zdr = sympy.symbols("xr, yr, zr, xdr, ydr, zdr")
     equations = []
@@ -93,7 +93,7 @@ def solve_part2(stones):
         if i >= 2:
             answer = sympy.solve(equations)
             if len(answer) == 1:
-                print(f"solved with {i} hailstones out of {len(stones)}")
+                print(f"solved with {i + 1} hailstones out of {len(stones)}")
                 break
 
     assert len(answer) == 1, "Should only have one solution"
