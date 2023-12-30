@@ -1,5 +1,5 @@
 import numpy as np
-import heapq
+import sympy
 
 with open(0, encoding="utf-8") as f:
     D = f.read()
@@ -67,91 +67,43 @@ for first in vectors_p1:
 print("Part 1:", ans_1)
 
 
-def closest_approach(first, sec):
-    P1 = np.array([*first[0]])
-    V1 = np.array([*first[1]])
-    P2 = np.array([*sec[0]])
-    V2 = np.array([*sec[1]])
+# For a rock to hit a stone, we would need to find a pos and vector for the rock that would equal the stone pos/vec after a given t
+# e.g. for the x coordinate; xr + xdr * t = xs + xds * t
+# Rearrange for t lets us sets up a series of equations to equat all axis
+# t = (xs - xr)/(xdr - xds)
+# This is the same format for each axis. Therefore:
+# (xs - xr)/(xdr - xds) = (ys - yr) / (ydr - yds) = (zs - zr) / (zdr - zds)
+# We can simplify to two equations to solve for each combination of 'rock' and stone
+# x by y; and
+# y by z;
+# E.g.
+# (xs - xr)*(ydr - yds) - (ys - yr)*(xdr - xds) = 0
+# (ys - yr)*(zdr - zds) - (zs - zr)*(ydr - yds) = 0
+# we then go through each hailstone and add this equation and solve using sympy
+def solve_part2(stones):
+    xr, yr, zr, xdr, ydr, zdr = sympy.symbols("xr, yr, zr, xdr, ydr, zdr")
+    equations = []
 
-    A = np.array([V1, -V2]).T
+    for i, (pos, vec) in enumerate(stones):
+        xs, ys, zs = pos
+        xds, yds, zds = vec
+        equations.append((xs - xr) * (ydr - yds) - (ys - yr) * (xdr - xds))
+        equations.append((ys - yr) * (zdr - zds) - (zs - zr) * (ydr - yds))
 
-    if np.linalg.matrix_rank(A) < 2:
-        return None
+        if i >= 2:
+            answer = sympy.solve(equations)
+            if len(answer) == 1:
+                print(f"solved with {i} hailstones out of {len(stones)}")
+                break
 
-    B = P2 - P1
-    X, _, _, _ = np.linalg.lstsq(A, B, rcond=None)
-    assert len(X) == 2, f"Should be 2 {X}"
+    assert len(answer) == 1, "Should only have one solution"
+    assert all(
+        x % 1 == 0 for x in answer[0].values()
+    ), "Solution should be interger values"
 
-    if np.all(X >= 0):
-        i1 = P1 + X[0] * V1
-        i2 = P2 + X[1] * V2
-
-        return np.linalg.norm(i1 - i2)
-
-    return None
+    return answer[0][xr] + answer[0][yr] + answer[0][zr]
 
 
-ans_2 = 0
-
-possible_search_path = [
-    (1, 0, 0, 0, 0, 0),
-    (-1, 0, 0, 0, 0, 0),
-    (0, 1, 0, 0, 0, 0),
-    (0, -1, 0, 0, 0, 0),
-    (0, 0, 1, 0, 0, 0),
-    (0, 0, -1, 0, 0, 0),
-]
-
-possible_values = [(1e9, (0, 0, 0), (1, 1, 1))]
-
-heapq.heapify(possible_values)
-
-seen = set()
-
-attempts = 0
-while True:
-    score, pos, vec = heapq.heappop(possible_values)
-    seen.add((pos, vec))
-    nx, ny, nz = pos
-    nmx, nmy, nmz = vec
-    min_error = score
-    print(
-        "Checking:",
-        attempts,
-        ((nx, ny, nz), (nmx, nmy, nmz)),
-        score,
-        len(possible_values),
-    )
-
-    for i in range(12):
-        modify_vect = [0] * 6
-        modify_vect[i % 6] += (-1) ** (i // 6)
-
-        test_line = (
-            (nx + modify_vect[0], ny + modify_vect[1], nz + modify_vect[2]),
-            (nmx + modify_vect[3], nmy + modify_vect[4], nmz + modify_vect[5]),
-        )
-
-        errors = 0
-
-        for sec in vectors_p2:
-            match closest_approach(test_line, sec):
-                case None:
-                    errors += 1e9
-                case float(x):
-                    errors += x
-
-        if test_line not in seen:
-            min_error = min(errors, min_error)
-            heapq.heappush(possible_values, (errors, *test_line))
-
-    if score <= errors:
-        attempts += 1
-
-    if attempts > 100000:
-        _, final_pos, _ = heapq.heappop(possible_values)
-        ans_2 = sum(final_pos)
-        break
-
+ans_2 = solve_part2(vectors_p2)
 
 print("Part 2:", ans_2)
