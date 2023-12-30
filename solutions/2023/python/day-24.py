@@ -102,39 +102,56 @@ possible_search_path = [
     (0, 0, -1, 0, 0, 0),
 ]
 
-possible_values = [(1e9, 24, 13, 10, -3, 1, 2)]
+possible_values = [(1e9, (0, 0, 0), (1, 1, 1))]
 
 heapq.heapify(possible_values)
 
-# Find least squared errors:
+seen = set()
+
+attempts = 0
 while True:
-    score, nx, ny, nz, nmx, nmy, nmz = heapq.heappop(possible_values)
+    score, pos, vec = heapq.heappop(possible_values)
+    seen.add((pos, vec))
+    nx, ny, nz = pos
+    nmx, nmy, nmz = vec
+    min_error = score
+    print(
+        "Checking:",
+        attempts,
+        ((nx, ny, nz), (nmx, nmy, nmz)),
+        score,
+        len(possible_values),
+    )
 
-    first = [(nx, ny, nz), (nmx, nmy, nmz)]
-
-    errors = 0
-    
-    miss_int = False
     for i in range(12):
-        modify_vect = [0]*6
-        new_vec = modify_vect[i%2][i%3] + (-1)**(i//6)
+        modify_vect = [0] * 6
+        modify_vect[i % 6] += (-1) ** (i // 6)
 
-        test_line = ((nx + new_vec[0], ny + new_vec[1], nz + new_vec[2]),
-                (nmx + new_vec[3], nmy + new_vec[4], nmz + new_vec[5]))
+        test_line = (
+            (nx + modify_vect[0], ny + modify_vect[1], nz + modify_vect[2]),
+            (nmx + modify_vect[3], nmy + modify_vect[4], nmz + modify_vect[5]),
+        )
+
+        errors = 0
 
         for sec in vectors_p2:
-            match closest_approach(first, sec):
+            match closest_approach(test_line, sec):
                 case None:
-                    miss_int = True
+                    errors += 1e9
                 case float(x):
                     errors += x
 
-        if not miss_int:
-            ans_2 = (nx + ny + nz)
-                    
-        heapq.heappush(possible_values, (score, ))
+        if test_line not in seen:
+            min_error = min(errors, min_error)
+            heapq.heappush(possible_values, (errors, *test_line))
 
-    print("errors:", errors)
+    if score <= errors:
+        attempts += 1
+
+    if attempts > 100000:
+        _, final_pos, _ = heapq.heappop(possible_values)
+        ans_2 = sum(final_pos)
+        break
 
 
 print("Part 2:", ans_2)
