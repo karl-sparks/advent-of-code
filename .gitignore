@@ -162,5 +162,5 @@ cython_debug/
 data/*
 
 # AOC Tiles
- .aoc_tiles/*
+.aoc_tiles/*
 !.aoc_tiles/tiles/
