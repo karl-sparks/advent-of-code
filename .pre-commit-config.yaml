@@ -5,4 +5,3 @@ repos:
           - id: aoc-tiles
             args:
               - --auto-add-tiles-to-git=amend
-              - --count_as_solved_when=either

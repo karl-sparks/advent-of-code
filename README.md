@@ -3,7 +3,7 @@ Repo to store my Advent of Code solutions.
 
 <!-- AOC TILES BEGIN -->
 <h1 align="center">
-  2023 - 7 ⭐
+  2023 - 8 ⭐
 </h1>
 <a href="solutions/2023/python/day-1.py">
   <img src=".aoc_tiles/tiles/2023/01.png" width="161px">
