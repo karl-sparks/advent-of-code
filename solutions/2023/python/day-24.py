@@ -1,4 +1,5 @@
 import numpy as np
+import heapq
 
 with open(0, encoding="utf-8") as f:
     D = f.read()
@@ -90,33 +91,50 @@ def closest_approach(first, sec):
     return None
 
 
-def find_intersection_p2(first, sec):
-    closest_approach(first, sec)
-
-
 ans_2 = 0
 
-possible_values = [[0, 0, 0, 1, 1, 1]]
+possible_search_path = [
+    (1, 0, 0, 0, 0, 0),
+    (-1, 0, 0, 0, 0, 0),
+    (0, 1, 0, 0, 0, 0),
+    (0, -1, 0, 0, 0, 0),
+    (0, 0, 1, 0, 0, 0),
+    (0, 0, -1, 0, 0, 0),
+]
+
+possible_values = [(1e9, 24, 13, 10, -3, 1, 2)]
+
+heapq.heapify(possible_values)
 
 # Find least squared errors:
-for nx, ny, nz, nmx, nmy, nmz in possible_values:
-    first = ((nx, ny, nz), (nmx, nmy, nmz))
+while True:
+    score, nx, ny, nz, nmx, nmy, nmz = heapq.heappop(possible_values)
+
+    first = [(nx, ny, nz), (nmx, nmy, nmz)]
 
     errors = 0
     
     miss_int = False
-    for sec in vectors_p2:
-        match find_intersection_p2(first, sec):
-            case None:
-                miss_int = True
-            case float(x):
-                errors += x
+    for i in range(12):
+        modify_vect = [0]*6
+        new_vec = modify_vect[i%2][i%3] + (-1)**(i//6)
 
-    if not miss_int:
-        ans_2 = (nx, ny, nz)
-                
+        test_line = ((nx + new_vec[0], ny + new_vec[1], nz + new_vec[2]),
+                (nmx + new_vec[3], nmy + new_vec[4], nmz + new_vec[5]))
 
-    print(errors)
+        for sec in vectors_p2:
+            match closest_approach(first, sec):
+                case None:
+                    miss_int = True
+                case float(x):
+                    errors += x
+
+        if not miss_int:
+            ans_2 = (nx + ny + nz)
+                    
+        heapq.heappush(possible_values, (score, ))
+
+    print("errors:", errors)
 
 
 print("Part 2:", ans_2)
