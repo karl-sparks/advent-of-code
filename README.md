@@ -1,9 +1,9 @@
 # Advent of Code
-Repo to store my Advent of Code solutions.
+Repo to store my Advent of Code solutions. Some days have been solved with no solutions stored here as they were solved as part of a work event.
 
 <!-- AOC TILES BEGIN -->
 <h1 align="center">
-  2023 - 8 ⭐
+  2023 - 50 ⭐ - Python
 </h1>
 <a href="solutions/2023/python/day-1.py">
   <img src=".aoc_tiles/tiles/2023/01.png" width="161px">
@@ -76,5 +76,29 @@ Repo to store my Advent of Code solutions.
 </a>
 <a href="solutions/2023/python/day-24.py">
   <img src=".aoc_tiles/tiles/2023/24.png" width="161px">
+</a>
+<a href="solutions/2023/python/day-25.py">
+  <img src=".aoc_tiles/tiles/2023/25.png" width="161px">
+</a>
+<h1 align="center">
+  2022 - 12 ⭐ - Python
+</h1>
+<a href="None">
+  <img src=".aoc_tiles/tiles/2022/01.png" width="161px">
+</a>
+<a href="None">
+  <img src=".aoc_tiles/tiles/2022/02.png" width="161px">
+</a>
+<a href="None">
+  <img src=".aoc_tiles/tiles/2022/03.png" width="161px">
+</a>
+<a href="None">
+  <img src=".aoc_tiles/tiles/2022/04.png" width="161px">
+</a>
+<a href="None">
+  <img src=".aoc_tiles/tiles/2022/05.png" width="161px">
+</a>
+<a href="solutions/2022/python/day-6.py">
+  <img src=".aoc_tiles/tiles/2022/06.png" width="161px">
 </a>
 <!-- AOC TILES END -->
