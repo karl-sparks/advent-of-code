@@ -1,5 +1,6 @@
 # Advent of Code
-Repo to store my Advent of Code solutions. Some days have been solved with no solutions stored here as they were solved as part of a work event.
+
+Repo to store my Advent of Code solutions. Some days have been solved with no solutions stored here as they were solved as part of a work event (and I haven't bothered copying them into this repo yet).
 
 <!-- AOC TILES BEGIN -->
 <h1 align="center">
