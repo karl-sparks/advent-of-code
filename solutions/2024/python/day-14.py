@@ -82,6 +82,7 @@ def ans_2(D, max_x, max_y, times):
 
         if len(at_pos) == len(robots):
             print_robots(robots)
+        assert len(at_pos) != len(robots), x # Find out how many seconds needed
         
     
     #print_robots(0)
