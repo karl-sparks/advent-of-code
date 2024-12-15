@@ -44,7 +44,7 @@ def print_robots(robots):
         maps[robot.y][robot.x] += 1
         
     for line in maps:
-        print(line)
+        print("".join([" " if x == 0 else "X" for x in line]))
 
 def ans_1(D, max_x, max_y, times):
     ans = 0
