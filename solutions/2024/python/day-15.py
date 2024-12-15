@@ -1,5 +1,7 @@
 """AOC day 15"""
 
+import os
+import time
 
 print("AOC day 15")
 fp_0 = "data/test-15.txt"
@@ -131,13 +133,28 @@ def ans_2(D):
     
     insts = D[brk + 1:]
     
+    num_instrs = len(insts) * len(insts[0])
+    
     start = get_robot_pos(area)
+    
+    width = len(area[0]) + 1
+
+    procsesed_insts = 0
+
+    os.system("clear")
+    time.sleep(3)
 
     for line in insts:
         for inst in line:
             if can_move(start, inst, area):
                 move_robot(start, inst, area)
                 start = mp(start, inst)
+            os.system("clear")
+            procsesed_insts += 1
+            for t in area:
+                print("".join(t))
+            print("="*int(width*(procsesed_insts/num_instrs)) + "+"*int(width*(1-(procsesed_insts/num_instrs))))
+            time.sleep(0.01)
 
     for x, line in enumerate(area):
         for y, c in enumerate(line):
@@ -147,5 +164,5 @@ def ans_2(D):
     return ans
 
 
-print(f"Ans 2 test: {ans_2(read_input(fp_0))}")
+#print(f"Ans 2 test: {ans_2(read_input(fp_0))}")
 print(f"Ans 2 real: {ans_2(read_input(fp_1))}")
