@@ -57,10 +57,9 @@ def search_map(start, p_map):
     while que:
         que.sort()
         score, np = que.pop(0)
-        if score > pos_scores.get((np.x, np.y, np.d), best_score):
-            continue
+        if score > pos_scores.get((np.x, np.y, np.d), best_score): continue
         
-        pos_scores[(np.x, np.y, np.d)] = min(pos_scores.get((np.x, np.y, np.d), score), score)
+        pos_scores[(np.x, np.y, np.d)] = score
         
         pos = p_map[np.x][np.y]
         
@@ -74,18 +73,14 @@ def search_map(start, p_map):
             for new_d in cd[np.d]:
                 nx = np.x + df[new_d][0]
                 ny = np.y + df[new_d][1]
-                if 0 <= nx < len(p_map) and 0 <= ny < len(p_map[0]) and (nx, ny) not in np.path:
-                    n_pos = p_map[nx][ny]
-                    if n_pos != "#":
-                        n_path = np.path.copy()
-                        n_path.add((nx, ny))
-                        
-                        scor_adj = 1 if np.d == new_d else 1001
-                        
-                        new_score = score + scor_adj
+                if p_map[nx][ny] != "#":
+                    n_path = np.path.copy()
+                    n_path.add((nx, ny))
+                    
+                    new_score = score + (1 if np.d == new_d else 1001)
 
-                        if new_score <= pos_scores.get((nx, ny, new_d), best_score):
-                            que.append((new_score, Path(x=nx, y=ny, d=new_d, path=n_path)))
+                    if new_score <= pos_scores.get((nx, ny, new_d), best_score):
+                        que.append((new_score, Path(x=nx, y=ny, d=new_d, path=n_path)))
     
     return best_score, len(valid_paths)           
 
