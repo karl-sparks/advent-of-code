@@ -267,7 +267,7 @@ def apply_swap(
 
 def part_two(D: str) -> str:
     print("Running part two")
-    initial_gate_states, initial_wire_state = parse_input(D)
+    initial_gate_states, _ = parse_input(D)
 
     error_gates = validate_gates(initial_gate_states)
 
